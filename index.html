@@ -61,15 +61,16 @@
                         next += 4 * width
                         continue
                     }
+		    var line = ''
                     for (var col = 0; col < width; col++) {
                         if (col % 2 == 0) {
                             var color = data[next] + data[next + 1] + data[next + 2]
                             color = color / 3
-                            string = string + chars[parseInt(color / 16)]
+                            line = chars[parseInt(color / 16)] + line
                         }
                         next = next + 4
                     }
-                    string = string + '\n'
+                    string = string + line + '\n'
                 }
 
                 return string
