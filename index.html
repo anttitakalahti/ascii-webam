@@ -1,12 +1,12 @@
 <!DOCTYPE HTML>
 <html>
     <head>
-        <script type="text/javascript">
+        <script>
 
             navigator.getMedia = ( navigator.getUserMedia ||
                                    navigator.webkitGetUserMedia ||
                                    navigator.mozGetUserMedia ||
-                                   navigator.msGetUserMedia);
+                                   navigator.msGetUserMedia)
             navigator.getMedia (
                 {
       	            video: true,
@@ -22,9 +22,7 @@
                 },
 
                 function(err) { console.log("The following error occured: " + err) }
-            );
-
-            var scale = 1
+            )
 
             function captureImage() {
                 var video = document.querySelector('video')
@@ -32,8 +30,8 @@
 		
                 var canvas = document.querySelector('canvas')
         
-                canvas.width = video.videoWidth * scale
-                canvas.height = video.videoHeight * scale
+                canvas.width = video.videoWidth
+                canvas.height = video.videoHeight
 
                 var context = canvas.getContext('2d')
                 context.drawImage(video, 0, 0, canvas.width, canvas.height)
@@ -48,7 +46,6 @@
 			 '*','H','x','z',
 			 'o','+','=','-', 
 			 ':',',','.',' ']
-            function getChar(index) { return chars[index] }
 
             function getString(data, width, height) {
                 var next = 0
@@ -68,7 +65,7 @@
                         if (col % 2 == 0) {
                             var color = data[next] + data[next + 1] + data[next + 2]
                             color = color / 3
-                            string = string + getChar(parseInt(color / 16))
+                            string = string + chars[parseInt(color / 16)]
                         }
                         next = next + 4
                     }
