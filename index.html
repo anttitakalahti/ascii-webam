@@ -1,0 +1,101 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <script type="text/javascript">
+
+            navigator.getMedia = ( navigator.getUserMedia ||
+                                   navigator.webkitGetUserMedia ||
+                                   navigator.mozGetUserMedia ||
+                                   navigator.msGetUserMedia);
+            navigator.getMedia (
+                {
+      	            video: true,
+                    audio: false
+                },
+
+                function(localMediaStream) {
+                    var video = document.querySelector('video');
+                    video.src = window.URL.createObjectURL(localMediaStream);
+                    video.onloadedmetadata = function(e) {
+                        captureImage()
+                    }
+                },
+
+                function(err) { console.log("The following error occured: " + err) }
+            );
+
+            var scale = 1
+
+            function captureImage() {
+                var video = document.querySelector('video')
+                if (!video) { return }
+		
+                var canvas = document.querySelector('canvas')
+        
+                canvas.width = video.videoWidth * scale
+                canvas.height = video.videoHeight * scale
+
+                var context = canvas.getContext('2d')
+                context.drawImage(video, 0, 0, canvas.width, canvas.height)
+
+                var idata = context.getImageData(0,0,640,480)
+                var data = idata.data
+		
+                document.getElementById('output').innerHTML = getString(data, 640, 480)
+            }
+
+	    var chars = ['@','#','$','A',
+			 '*','H','x','z',
+			 'o','+','=','-', 
+			 ':',',','.',' ']
+            function getChar(index) { return chars[index] }
+
+            function getString(data, width, height) {
+                var next = 0
+                var string = ''
+
+                // data[0] = red
+                // data[1] = green
+                // data[2] = blue
+                // data[3] = alpha
+
+                for (var row = 0; row < height; row++) {
+                    if (row % 5 != 0) {
+                        next += 4 * width
+                        continue
+                    }
+                    for (var col = 0; col < width; col++) {
+                        if (col % 2 == 0) {
+                            var color = data[next] + data[next + 1] + data[next + 2]
+                            color = color / 3
+                            string = string + getChar(parseInt(color / 16))
+                        }
+                        next = next + 4
+                    }
+                    string = string + '\n'
+                }
+
+                return string
+            }
+
+            var t=setInterval(captureImage,100)
+        </script>
+
+        <style>
+            canvas, video {
+                display: none;
+            }
+            pre {
+                font-family:"Courier New", Monospace;
+                font-size: 6px;
+		width: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <video autoplay></video>
+        <canvas></canvas>
+        <pre id="output">
+        </pre>
+    </body>
+</html>
