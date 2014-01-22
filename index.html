@@ -73,11 +73,25 @@
                     string = string + line + '\n'
                 }
 
-		return getStringThatShowsMovement(prevString, string)
+                return getStringThatShowsMovement(prevString, string)
             }
 
-	    function getStringThatShowsMovement(prevString, string) {
-		return "fook"
+	    function getStringThatShowsMovement(prevString, newString) {
+                console.log(prevString.length,newString.length)
+
+
+		var string = ''
+                for (var i=0; i < newString.length; i++) {
+                    if (newString.charAt(i) == '\n') {
+                        string = string + '\n'
+                    } else if (newString.charAt(i) == prevString.charAt(i)) {
+                        string = string + ' '
+                    } else {
+                        string = string + '@'
+                    }
+                }
+
+                return string
 	    }
 
             var t=setInterval(captureImage,100)
