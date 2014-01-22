@@ -39,15 +39,15 @@
                 var idata = context.getImageData(0,0,640,480)
                 var data = idata.data
 		
-                document.getElementById('output').innerHTML = getString(data, 640, 480)
+                document.getElementById('output').innerHTML = getString(data, 640, 480, document.getElementById('output').innerHTML)
             }
 
-	    var chars = ['@','#','$','A',
-			 '*','H','x','z',
+	    var chars = ['@','#','H','$',
+			 'A','*','x','z',
 			 'o','+','=','-', 
 			 ':',',','.',' ']
 
-            function getString(data, width, height) {
+            function getString(data, width, height, prevString) {
                 var next = 0
                 var string = ''
 
@@ -73,8 +73,12 @@
                     string = string + line + '\n'
                 }
 
-                return string
+		return getStringThatShowsMovement(prevString, string)
             }
+
+	    function getStringThatShowsMovement(prevString, string) {
+		return "fook"
+	    }
 
             var t=setInterval(captureImage,100)
         </script>
