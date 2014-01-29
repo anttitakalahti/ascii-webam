@@ -2,6 +2,16 @@
 <html>
     <head>
         <title>ASCII webcam - because I can</title>
+        <style>
+            canvas, video {
+                display: none;
+            }
+            pre {
+                font-family:"Courier New", Monospace;
+                font-size: 6px;
+                width: 100%;
+            }
+        </style>
     </head>
     <body>
         <video autoplay></video>
@@ -60,16 +70,5 @@
 
             var t=setInterval(captureImage, 100)
         </script>
-
-        <style>
-            canvas, video {
-                display: none;
-            }
-            pre {
-                font-family:"Courier New", Monospace;
-                font-size: 6px;
-        width: 100%;
-            }
-        </style>
     </body>
 </html>
