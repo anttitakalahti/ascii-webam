@@ -3,6 +3,8 @@
     <head>
         <script>
 
+            var gotImage = false
+
             navigator.getMedia = ( navigator.getUserMedia ||
                                    navigator.webkitGetUserMedia ||
                                    navigator.mozGetUserMedia ||
@@ -17,12 +19,15 @@
                     var video = document.querySelector('video');
                     video.src = window.URL.createObjectURL(localMediaStream);
                     video.onloadedmetadata = function(e) {
+			gotImage = true
                         captureImage()
                     }
                 },
 
                 function(err) { console.log("The following error occured: " + err) }
             )
+
+            var prevImage = ''
 
             function captureImage() {
                 var video = document.querySelector('video')
@@ -39,7 +44,10 @@
                 var idata = context.getImageData(0,0,640,480)
                 var data = idata.data
 		
-                document.getElementById('output').innerHTML = getString(data, 640, 480, document.getElementById('output').innerHTML)
+                var nextImage = getString(data, 640, 480)
+                
+                document.getElementById('output').innerHTML = getStringThatShowsMovement(prevImage, nextImage)
+                prevImage = nextImage
             }
 
 	    var chars = ['@','#','H','$',
@@ -47,7 +55,8 @@
 			 'o','+','=','-', 
 			 ':',',','.',' ']
 
-            function getString(data, width, height, prevString) {
+            function getString(data, width, height) {
+                if (!gotImage) { return '' }
                 var next = 0
                 var string = ''
 
@@ -72,27 +81,33 @@
                     }
                     string = string + line + '\n'
                 }
-
-                return getStringThatShowsMovement(prevString, string)
+                return string
             }
 
 	    function getStringThatShowsMovement(prevString, newString) {
-                console.log(prevString.length,newString.length)
-
-
 		var string = ''
                 for (var i=0; i < newString.length; i++) {
                     if (newString.charAt(i) == '\n') {
                         string = string + '\n'
-                    } else if (newString.charAt(i) == prevString.charAt(i)) {
+                    } else if (distanceBetween(newString.charAt(i), prevString.charAt(i)) < 5) {
                         string = string + ' '
                     } else {
                         string = string + '@'
                     }
                 }
-
                 return string
 	    }
+
+            function distanceBetween(a, b) {
+                return Math.abs(getIndex(a) - getIndex(b))
+            }
+
+            function getIndex(char) {
+                for (var i = 0; i < chars.length; ++i) {
+                    if (chars[i] == char) { return i }
+                }
+                return 100
+            }
 
             var t=setInterval(captureImage,100)
         </script>
