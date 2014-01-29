@@ -1,8 +1,16 @@
 <!DOCTYPE HTML>
 <html>
     <head>
+        <title>ASCII webcam - because I can</title>
+    </head>
+    <body>
+        <video autoplay></video>
+        <canvas></canvas>
+        <pre id="output">
+        </pre>
         <script src="stringUtils.js"></script>
         <script>
+
             var gotFirstImage = false
             var prevImage = ''
 
@@ -12,14 +20,14 @@
                                    navigator.msGetUserMedia)
             navigator.getMedia (
                 {
-      	            video: true,
+                    video: true,
                     audio: false
                 },
                 function(localMediaStream) {
                     var video = document.querySelector('video')
                     video.src = window.URL.createObjectURL(localMediaStream)
                     video.onloadedmetadata = function(e) {
-			            gotFirstImage = true
+                        gotFirstImage = true
                         captureImage()
                     }
                 },
@@ -31,7 +39,7 @@
                     
                 var video = document.querySelector('video')
                 if (!video) { return }
-		
+        
                 var canvas = document.querySelector('canvas')
         
                 canvas.width = video.videoWidth
@@ -42,7 +50,7 @@
 
                 var idata = context.getImageData(0,0,640,480)
                 var data = idata.data
-		
+        
                 var nextImage = stringUtils.getString(data, 640, 480)
                 
                 document.getElementById('output').innerHTML = stringUtils.getStringThatShowsMovement(prevImage, nextImage)
@@ -60,14 +68,8 @@
             pre {
                 font-family:"Courier New", Monospace;
                 font-size: 6px;
-		width: 100%;
+        width: 100%;
             }
         </style>
-    </head>
-    <body>
-        <video autoplay></video>
-        <canvas></canvas>
-        <pre id="output">
-        </pre>
     </body>
 </html>
