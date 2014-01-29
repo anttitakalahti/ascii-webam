@@ -3,7 +3,8 @@
     <head>
         <script>
 
-            var gotImage = false
+            var gotFirstImage = false
+            var prevImage = ''
 
             navigator.getMedia = ( navigator.getUserMedia ||
                                    navigator.webkitGetUserMedia ||
@@ -14,20 +15,17 @@
       	            video: true,
                     audio: false
                 },
-
                 function(localMediaStream) {
-                    var video = document.querySelector('video');
-                    video.src = window.URL.createObjectURL(localMediaStream);
+                    var video = document.querySelector('video')
+                    video.src = window.URL.createObjectURL(localMediaStream)
                     video.onloadedmetadata = function(e) {
-			gotImage = true
+			gotFirstImage = true
                         captureImage()
                     }
                 },
-
                 function(err) { console.log("The following error occured: " + err) }
             )
 
-            var prevImage = ''
 
             function captureImage() {
                 var video = document.querySelector('video')
@@ -47,6 +45,7 @@
                 var nextImage = getString(data, 640, 480)
                 
                 document.getElementById('output').innerHTML = getStringThatShowsMovement(prevImage, nextImage)
+
                 prevImage = nextImage
             }
 
@@ -56,7 +55,7 @@
 			 ':',',','.',' ']
 
             function getString(data, width, height) {
-                if (!gotImage) { return '' }
+                if (!gotFirstImage) { return '' }
                 var next = 0
                 var string = ''
 
@@ -89,7 +88,7 @@
                 for (var i=0; i < newString.length; i++) {
                     if (newString.charAt(i) == '\n') {
                         string = string + '\n'
-                    } else if (distanceBetween(newString.charAt(i), prevString.charAt(i)) < 5) {
+                    } else if (distanceBetween(newString.charAt(i), prevString.charAt(i)) < 4) { // I like four.
                         string = string + ' '
                     } else {
                         string = string + '@'
@@ -109,7 +108,7 @@
                 return 100
             }
 
-            var t=setInterval(captureImage,100)
+            var t=setInterval(captureImage, 100)
         </script>
 
         <style>
