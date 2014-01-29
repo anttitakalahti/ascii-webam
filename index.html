@@ -1,8 +1,8 @@
 <!DOCTYPE HTML>
 <html>
     <head>
+        <script src="stringUtils.js"></script>
         <script>
-
             var gotFirstImage = false
             var prevImage = ''
 
@@ -19,15 +19,16 @@
                     var video = document.querySelector('video')
                     video.src = window.URL.createObjectURL(localMediaStream)
                     video.onloadedmetadata = function(e) {
-			gotFirstImage = true
+			            gotFirstImage = true
                         captureImage()
                     }
                 },
                 function(err) { console.log("The following error occured: " + err) }
             )
 
-
             function captureImage() {
+                if (!gotFirstImage) { return }
+                    
                 var video = document.querySelector('video')
                 if (!video) { return }
 		
@@ -42,70 +43,11 @@
                 var idata = context.getImageData(0,0,640,480)
                 var data = idata.data
 		
-                var nextImage = getString(data, 640, 480)
+                var nextImage = stringUtils.getString(data, 640, 480)
                 
-                document.getElementById('output').innerHTML = getStringThatShowsMovement(prevImage, nextImage)
+                document.getElementById('output').innerHTML = stringUtils.getStringThatShowsMovement(prevImage, nextImage)
 
                 prevImage = nextImage
-            }
-
-	    var chars = ['@','#','H','$',
-			 'A','*','x','z',
-			 'o','+','=','-', 
-			 ':',',','.',' ']
-
-            function getString(data, width, height) {
-                if (!gotFirstImage) { return '' }
-                var next = 0
-                var string = ''
-
-                // data[0] = red
-                // data[1] = green
-                // data[2] = blue
-                // data[3] = alpha
-
-                for (var row = 0; row < height; row++) {
-                    if (row % 5 != 0) {
-                        next += 4 * width
-                        continue
-                    }
-		    var line = ''
-                    for (var col = 0; col < width; col++) {
-                        if (col % 2 == 0) {
-                            var color = data[next] + data[next + 1] + data[next + 2]
-                            color = color / 3
-                            line = chars[parseInt(color / 16)] + line
-                        }
-                        next = next + 4
-                    }
-                    string = string + line + '\n'
-                }
-                return string
-            }
-
-	    function getStringThatShowsMovement(prevString, newString) {
-		var string = ''
-                for (var i=0; i < newString.length; i++) {
-                    if (newString.charAt(i) == '\n') {
-                        string = string + '\n'
-                    } else if (distanceBetween(newString.charAt(i), prevString.charAt(i)) < 4) { // I like four.
-                        string = string + ' '
-                    } else {
-                        string = string + '@'
-                    }
-                }
-                return string
-	    }
-
-            function distanceBetween(a, b) {
-                return Math.abs(getIndex(a) - getIndex(b))
-            }
-
-            function getIndex(char) {
-                for (var i = 0; i < chars.length; ++i) {
-                    if (chars[i] == char) { return i }
-                }
-                return 100
             }
 
             var t=setInterval(captureImage, 100)
