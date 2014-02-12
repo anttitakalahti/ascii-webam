@@ -13,16 +13,17 @@
             }
         </style>
     </head>
-    <body>
+    <body style="background: white">
         <video autoplay></video>
         <canvas></canvas>
-        <pre id="output">
+        <pre id="output" style="color: black">
         </pre>
         <script src="stringUtils.js"></script>
         <script>
 
             var gotFirstImage = false
             var prevImage = ''
+            var lastChange = 0
 
             navigator.getMedia = ( navigator.getUserMedia ||
                                    navigator.webkitGetUserMedia ||
@@ -68,12 +69,25 @@
                         .calculateChangePercentageInUpperRightCorner(prevImage, nextImage)
                 
                 if (changePercentageInUpperRightCorner > 0.1) {
-                    console.log('I am change!')
+                    invertColors()
                 }
 
                 document.getElementById('output').innerHTML = nextImage
 
                 prevImage = nextImage
+            }
+
+            function invertColors() {
+                if (lastChange === 0 || new Date().getTime() - lastChange > 1000) {
+                    if (document.body.style.background === 'white') {
+                        document.body.style.background = 'black'
+                        document.getElementById('output').style.color = 'white'
+                    } else {
+                        document.body.style.background = 'white'
+                        document.getElementById('output').style.color = 'black'
+                    }
+                    lastChange = new Date().getTime()
+                }
             }
 
             var t=setInterval(captureImage, 100)

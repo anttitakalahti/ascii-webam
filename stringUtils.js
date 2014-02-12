@@ -38,12 +38,12 @@ var stringUtils = (function() {
         var changedCharacters = 0
 
         var rows = getStringThatShowsMovement(prevString, newString).split('\n')
-        for (var row=0; row < rows.length/2; ++row) {
-            var secondHalf = rows[row].substring(rows[row].length/2)
-            changedCharacters += secondHalf.split(' ').join('').length
+        for (var row=0; row < rows.length/4; ++row) {
+            var lastQuarter = rows[row].substring(rows[row].length - (rows[row].length/4))
+            changedCharacters += lastQuarter.split(' ').join('').length
         }
 
-        var totalCharactersInUpperRightCorner = (rows.length/2) * (rows[0].length/2)
+        var totalCharactersInUpperRightCorner = (rows.length/4) * (rows[0].length/4)
         return changedCharacters / totalCharactersInUpperRightCorner
     }
 
