@@ -62,8 +62,16 @@
                 var data = idata.data
         
                 var nextImage = stringUtils.getString(data, 640, 480)
+
+                var changePercentageInUpperRightCorner =
+                    stringUtils
+                        .calculateChangePercentageInUpperRightCorner(prevImage, nextImage)
                 
-                document.getElementById('output').innerHTML = stringUtils.getStringThatShowsMovement(prevImage, nextImage)
+                if (changePercentageInUpperRightCorner > 0.1) {
+                    console.log('I am change!')
+                }
+
+                document.getElementById('output').innerHTML = nextImage
 
                 prevImage = nextImage
             }

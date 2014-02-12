@@ -34,6 +34,19 @@ var stringUtils = (function() {
         return string
     }
 
+    var calculateChangePercentageInUpperRightCorner = function(prevString, newString) {
+        var changedCharacters = 0
+
+        var rows = getStringThatShowsMovement(prevString, newString).split('\n')
+        for (var row=0; row < rows.length/2; ++row) {
+            var secondHalf = rows[row].substring(rows[row].length/2)
+            changedCharacters += secondHalf.split(' ').join('').length
+        }
+
+        var totalCharactersInUpperRightCorner = (rows.length/2) * (rows[0].length/2)
+        return changedCharacters / totalCharactersInUpperRightCorner
+    }
+
     var getStringThatShowsMovement = function(prevString, newString) {
         var string = ''
         for (var i=0; i < newString.length; i++) {
@@ -57,6 +70,6 @@ var stringUtils = (function() {
 
     return {
         getString: getString,
-        getStringThatShowsMovement: getStringThatShowsMovement
+        calculateChangePercentageInUpperRightCorner: calculateChangePercentageInUpperRightCorner
     }
 })()
